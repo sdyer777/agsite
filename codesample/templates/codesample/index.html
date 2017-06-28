@@ -1,0 +1,9 @@
+{% if wait_time_list %}
+    <ul>
+    {% for wt in wait_time_list %}
+        <li>{{ wt.visit_date }},  {{ wt.patient_type }},  {{ wt.wait_time }} min</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No wait times are available.</p>
+{% endif %}
