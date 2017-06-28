@@ -1,3 +1,9 @@
+<img src='../static/codesample/images/aglogo.png' width=150>
+<hr>
+<h1>Wait Times</h1>
+
+   <p>CSV File: {{ csvfilename }}</p>
+ 
 {% if wait_time_list %}
     <ul>
     {% for wt in wait_time_list %}
@@ -7,3 +13,30 @@
 {% else %}
     <p>No wait times are available.</p>
 {% endif %}
+
+<hr>
+<h1>Upload CSV</h1>
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data" action="{% url 'codesample:uploadfile' %}">
+    {% csrf_token %}
+    <input type="file" name="csvfile">
+    <button type="submit">Upload</button>
+  </form>
+
+
+{% endblock %}
+{% block download %}
+  <form method="post" enctype="multipart/form-data" action="{% url 'codesample:downloadsamplefile' %}">
+    {% csrf_token %}
+    <button type="submit">Download Sample CSV</button>
+  </form>
+
+{% endblock %}
+
+<script>    
+    document.addEventListener('DOMContentLoaded', function(){
+  alert("blabbo - loaded page now");
+  console.log('Loaded page');
+});
+</script>
