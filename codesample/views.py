@@ -45,6 +45,8 @@ def uploadfile(request):
             tmp = WaitTime(visit_date=line[0], patient_type=line[1].strip(), wait_time=line[2])
             tmp.save()
         f.close()
+        # delete uploaded file
+        os.remove(csvfilename)
         # redirect to index, which shows the new data
         return HttpResponseRedirect(reverse('codesample:index'))
 
@@ -52,7 +54,7 @@ def uploadfile(request):
 def downloadsamplefile(request):
     """download sample CSV file, which user can use as a reference
     """
-    with open('sampledata.csv', 'rb') as samplefile:
+    with open('codesample/sampledata.csv', 'rb') as samplefile:
         response = HttpResponse(samplefile.read(), content_type="application/text")
         response['Content-Disposition'] = 'attachment; filename=sampledata.csv'
         return response
