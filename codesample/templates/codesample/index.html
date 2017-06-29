@@ -39,13 +39,22 @@
 </table>
 
 
-<h1>Daily Wait Times</h1> 
+<h1>Daily Wait Times</h1>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function(){
-    drawChart();
-});
-</script>
+{% if wait_time_list %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+        drawChart();
+    });
+    </script>
+{% else %}
+    <div style="padding-left:25px">
+        <br>
+        <h3>No data found.</h3>
+        <br>
+        <i>Please upload a CSV file.  Download the sample CSV file for reference.</i>
+    </div>
+{% endif %}
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>

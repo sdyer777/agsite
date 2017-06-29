@@ -27,27 +27,29 @@ def index(request):
 def uploadfile(request):
     """upload CSV file, validate it, replace data in DB
     """
-    if request.method == 'POST' and request.FILES['csvfile']:
-        # open file
-        csvfile = request.FILES['csvfile']
-        fs = FileSystemStorage()
-        csvfilename = fs.save(csvfile.name, csvfile)
-        uploaded_file_url = fs.url(csvfilename)
-        # validate file
-        # << TO DO >>
-        # erase existing data
-        WaitTime.objects.all().delete()
-        # read CSV data into database
-        f = open(csvfilename, 'r')  
-        for line in f:
-            line =  line.split(',')
-            print (line)
-            tmp = WaitTime(visit_date=line[0], patient_type=line[1].strip(), wait_time=line[2])
-            tmp.save()
-        f.close()
-        # delete uploaded file
+    try:
+       if request.method == 'POST' and request.FILES['csvfile']:
+             # open file
+            csvfile = request.FILES['csvfile']
+            fs = FileSystemStorage()
+            csvfilename = fs.save(csvfile.name, csvfile)
+            uploaded_file_url = fs.url(csvfilename)
+            # erase existing data
+            WaitTime.objects.all().delete()
+            # read CSV data into database
+            f = open(csvfilename, 'r')  
+            for line in f:
+                line =  line.split(',')
+                print (line)
+                tmp = WaitTime(visit_date=line[0], patient_type=line[1].strip(), wait_time=line[2])
+                tmp.save()
+            f.close()
+            # delete uploaded file
+            os.remove(csvfilename)
+            # redirect to index, which shows the new data
+            return HttpResponseRedirect(reverse('codesample:index'))
+    except:
         os.remove(csvfilename)
-        # redirect to index, which shows the new data
         return HttpResponseRedirect(reverse('codesample:index'))
 
 
