@@ -18,11 +18,11 @@
         </td>
         <td style="width:200px; text-align:left; vertical-align:top; padding-left:60px; padding-top:5px;">
             <h4>Upload CSV</h4>
-            <form method="post" enctype="multipart/form-data" action="{% url 'codesample:uploadfile' %}">
+            <form id="csvuploadform" method="post" enctype="multipart/form-data" action="{% url 'codesample:uploadfile' %}">
                 {% csrf_token %}
-                <input type="file" name="csvfile">
+                <input type="file" name="csvfile" id="csvfile">
                 <br>
-                <button type="submit">Upload</button>
+                <button type="button" onclick="validateUpload();">Upload</button>
             </form>
        </td>
        <td style="text-align:left; vertical-align:top; padding-left:10px; padding-top:5px;">
@@ -60,3 +60,13 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script type="text/javascript" src="{% static 'codesample/barchart.js' %}"></script>
+
+<script>
+    function validateUpload() {
+        if(document.getElementById('csvfile').value == '') {
+            alert("Please choose a file.");
+        } else {
+            document.getElementById('csvuploadform').submit();
+        }
+   }
+</script>
