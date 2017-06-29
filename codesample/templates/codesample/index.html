@@ -40,23 +40,10 @@
 
 
 <h1>Daily Wait Times</h1> 
- 
-{% if wait_time_list %}
- {% comment %}
- <ul>
-    {% for wt in wait_time_list %}
-        <li>{{ wt.visit_date }},  {{ wt.visit_count }} visits,  {{ wt.avg_wait_time }} min avg wait</li>
-    {% endfor %}
-    </ul>
-     {% endcomment %} 
-{% else %}
-    <p>No wait times are available.</p>
-{% endif %}
 
 <script>
     document.addEventListener('DOMContentLoaded', function(){
     drawChart();
-    //alert("blabbo - loaded page now");
 });
 </script>
 
