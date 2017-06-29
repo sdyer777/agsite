@@ -1,68 +1,64 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'codesample/style.css' %}" />
-<script type="text/javascript" src="{% static 'codesample/d3/d3.min.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'codesample/style-chart.css' %}" />
+<script>
+    var data = [
+    {% for wt in wait_time_list %}
+        {visit_date: "{{ wt.visit_date }}", visit_count: {{ wt.visit_count }}, avg_wait_time: {{ wt.avg_wait_time }} },
+    {% endfor %}
+    ];
+
+</script>
 
 <table width=100% style="border: 1px solid black;">
     <tr>
-        <td style="width:190">
+        <td style="width:170px">
             <img src='../static/codesample/images/aglogo.png' width=150 border=1>
         </td>
-        <td  style="text-align:left">
-            <table width=100% >
-                <tr>
-                    <td width=20% style="text-align:left; vertical-align:top">
-                        <b>Upload CSV</b>
-                        <form method="post" enctype="multipart/form-data" action="{% url 'codesample:uploadfile' %}">
-                            {% csrf_token %}
-                            <input type="file" name="csvfile">
-                            <br>
-                            <button type="submit">Upload</button>
-                        </form>
-                   </td>
-                   <td width=20% style="text-align:left; vertical-align:top">
-                         <b>Sample CSV</b>
-                         <form method="post" enctype="multipart/form-data" action="{% url 'codesample:downloadsamplefile' %}">
-                            {% csrf_token %}
-                            <button type="submit">Download</button>
-                        </form>
-                    </td>
-                    <td  style="text-align:right; vertical-align:top">
-                        <a href="http://127.0.0.1:8000/admin" target="_">Admin</a>
-                        &nbsp;&nbsp;&nbsp;
-                    </td>
-                </tr>
-            </table>
+        <td style="width:200px; text-align:left; vertical-align:top; padding-left:60px; padding-top:5px;">
+            <h4>Upload CSV</h4>
+            <form method="post" enctype="multipart/form-data" action="{% url 'codesample:uploadfile' %}">
+                {% csrf_token %}
+                <input type="file" name="csvfile">
+                <br>
+                <button type="submit">Upload</button>
+            </form>
+       </td>
+       <td style="text-align:left; vertical-align:top; padding-left:10px; padding-top:5px;">
+             <h4>Sample CSV</h4>
+             <form method="post" enctype="multipart/form-data" action="{% url 'codesample:downloadsamplefile' %}">
+                {% csrf_token %}
+                <button type="submit">Download</button>
+            </form>
+        </td>
+        <td  style="text-align:right; vertical-align:top; padding-top:5px;">
+            <a href="http://127.0.0.1:8000/admin" target="_">&nbsp;&nbsp;Admin&nbsp;&nbsp;</a>
+            &nbsp;
         </td>
     </tr>
 </table>
 
 
-<h1>Wait Times - CSV FILE NAME HERE-- {{ csvfilename }} </h1> 
+<h2>Daily Wait Times</h2> 
  
 {% if wait_time_list %}
-    <ul>
+ {% comment %}
+ <ul>
     {% for wt in wait_time_list %}
-        <li>{{ wt.visit_date }},  {{ wt.patient_type }},  {{ wt.wait_time }} min</li>
+        <li>{{ wt.visit_date }},  {{ wt.visit_count }} visits,  {{ wt.avg_wait_time }} min avg wait</li>
     {% endfor %}
     </ul>
+     {% endcomment %} 
 {% else %}
     <p>No wait times are available.</p>
 {% endif %}
 
-
-
-
-
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function(){
     drawChart();
-    alert("blabbo - loaded page now");
+    //alert("blabbo - loaded page now");
 });
 </script>
 
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript" src="{% static 'codesample/barchart.js' %}"></script>
-
-
-<hr>
