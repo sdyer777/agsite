@@ -67,7 +67,6 @@ function drawChart() {
 	  .data(data)
 	.enter().append("rect")
       .attr("class", "bar")
-//	  .style("fill", "steelblue")
 	  .attr("x", function(d) { return x(d.visit_date); })
 	  .attr("width", x.rangeBand())
 	  .attr("y", function(d) { return y(d.avg_wait_time); })

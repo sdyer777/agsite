@@ -1,4 +1,5 @@
 import os
+import pytz
 
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import get_object_or_404, render
@@ -6,6 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.template import loader
 from django.db.models import Count, Avg, Func
+from django.utils.dateparse import parse_datetime
 
 from .models import WaitTime
 
@@ -28,7 +30,7 @@ def uploadfile(request):
     """upload CSV file, validate it, replace data in DB
     """
     try:
-       if request.method == 'POST' and request.FILES['csvfile']:
+        if request.method == 'POST' and request.FILES['csvfile']:
              # open file
             csvfile = request.FILES['csvfile']
             fs = FileSystemStorage()
@@ -40,8 +42,11 @@ def uploadfile(request):
             f = open(csvfilename, 'r')  
             for line in f:
                 line =  line.split(',')
-                print (line)
-                tmp = WaitTime(visit_date=line[0], patient_type=line[1].strip(), wait_time=line[2])
+                # localize the "naive" time from the CSV file. (avoids runtime error "received a naive dattime when time zone support is active".)
+                naive = parse_datetime(line[0])
+                line_visit_date = pytz.timezone("UTC").localize(naive, is_dst=None)
+                # create and save WaitTime object
+                tmp = WaitTime(visit_date=line_visit_date, patient_type=line[1].strip(), wait_time=line[2])
                 tmp.save()
             f.close()
             # delete uploaded file
@@ -49,7 +54,10 @@ def uploadfile(request):
             # redirect to index, which shows the new data
             return HttpResponseRedirect(reverse('codesample:index'))
     except:
-        os.remove(csvfilename)
+        # if we have a file name (would be blank if exception occured before it was set), remove it
+        if csvfilename:
+            os.remove(csvfilename)
+        # recired to index, which shows error message in this case
         return HttpResponseRedirect(reverse('codesample:index'))
 
 
