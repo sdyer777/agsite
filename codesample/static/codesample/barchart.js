@@ -20,12 +20,21 @@ function drawChart() {
 		.orient("left")
 		.ticks(10);
 
+	var tip = d3.tip()
+	  .attr('class', 'd3-tip')
+	  .offset([-10, 0])
+	  .html(function(d) {
+		return "<strong>Avg. Wait:</strong> <span style='color:orangered'>" + d.avg_wait_time + "</span><br><strong>Visits:</strong> <span style='color:orangered'>" + d.visit_count + "</span>";
+	  })
+
 	var svg = d3.select("body").append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
 	  .append("g")
 		.attr("transform", 
 			  "translate(" + margin.left + "," + margin.top + ")");
+
+	svg.call(tip);
 
 	data.forEach(function(d) {
 		d.visit_date = parseDate(d.visit_date);
@@ -57,10 +66,13 @@ function drawChart() {
 	svg.selectAll("bar")
 	  .data(data)
 	.enter().append("rect")
-	  .style("fill", "steelblue")
+      .attr("class", "bar")
+//	  .style("fill", "steelblue")
 	  .attr("x", function(d) { return x(d.visit_date); })
 	  .attr("width", x.rangeBand())
 	  .attr("y", function(d) { return y(d.avg_wait_time); })
-	  .attr("height", function(d) { return height - y(d.avg_wait_time); });
+	  .attr("height", function(d) { return height - y(d.avg_wait_time); })
+	  .on('mouseover', tip.show)
+	  .on('mouseout', tip.hide)
     }
 

@@ -9,7 +9,7 @@ a:hover {
 }
 
 body {
---    background: white url("images/background.gif") no-repeat right bottom;
+  font: 10px sans-serif;
 }
 
 h1 {
